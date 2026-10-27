@@ -1,12 +1,12 @@
 {
   "name": "garden-wardens",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "description": "An original hand-painted WebGL garden tower-defense game.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build": "node tools/copy-licenses.js && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "lint": "eslint .",
     "format": "prettier --write .",

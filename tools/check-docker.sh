@@ -2,6 +2,7 @@
 # Build the production image, run it unprivileged/read-only, check health and
 # corresponding source availability, then run the same production browser suite.
 # DOCKER_IMAGE overrides the local image tag; CHROMIUM_PATH selects the browser.
+# SPDX-License-Identifier: GPL-3.0-or-later
 set -euo pipefail
 cd "$(dirname "$0")/.."
 image="${DOCKER_IMAGE:-garden-wardens:local}"
@@ -19,7 +20,11 @@ for attempt in {1..30}; do
 done
 curl --fail --silent "$url/healthz"
 curl --fail --silent "$url/source.tar.gz" | tar -tzf - > "$source_list"
-rg -q './src/main.js' "$source_list"
+if command -v rg >/dev/null; then
+  rg -Fq './src/main.js' "$source_list"
+else
+  grep -Fq './src/main.js' "$source_list"
+fi
 rm "$source_list"
 [[ "$(docker inspect --format '{{.Config.User}}' "$container")" == 101 ]]
 E2E_BASE_URL="$url" npm run test:e2e

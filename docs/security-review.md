@@ -31,5 +31,8 @@ The stylesheet loads a Google font; that request exposes ordinary request metada
 to the font provider. This is a scoped source/dependency review, not a penetration
 test, and a clean registry audit does not establish absence of vulnerabilities.
 
-Outstanding supply-chain hardening: GitHub Actions are version-tagged rather than
-commit-pinned; the container base image is reviewed separately when Docker is added.
+Follow-up hardening: GitHub Actions now use exact commit SHAs and Docker bases
+use verified immutable digests. The runtime is unprivileged, supports a read-only
+filesystem and supplies source/license notices. Optional Python artwork dependencies
+are pinned in `requirements-assets.txt`; those offline tools are outside npm audit
+and the application JavaScript coverage boundary.
