@@ -1432,6 +1432,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   collectOrb(orb) {
+    if (!this.started || this.isPaused || this.ended) return;
     const { sprite, value } = orb;
     if (!sprite?.active || !this.orbs.includes(orb)) return;
     Phaser.Utils.Array.Remove(this.orbs, orb);

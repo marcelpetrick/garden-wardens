@@ -12,7 +12,7 @@ async function clickGame(page, x, y) {
 test("boots, starts and plants with no runtime errors", async ({ page }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("./");
   await expect(page.locator("canvas")).toBeVisible();
   await page.waitForTimeout(2500);
   await clickGame(page, 800, 567);
@@ -25,7 +25,7 @@ test("boots, starts and plants with no runtime errors", async ({ page }) => {
 });
 test("mobile canvas fits the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("./");
   await expect(page.locator("canvas")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
     390,
@@ -37,7 +37,7 @@ test("switches languages before and during play while Mandarin remains default",
 }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("./");
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
   await page.locator("#language").selectOption("en");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
@@ -64,15 +64,18 @@ test("speed control supports 4×, pause/resume and returning to normal", async (
 }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("./");
   await expect(page.locator("canvas")).toBeVisible();
   await page.waitForTimeout(2000);
   await clickGame(page, 800, 567);
   await clickGame(page, 310, 330);
+  await page.keyboard.press("2");
+  await clickGame(page, 450, 450);
   await page.locator("#speed").click();
   await page.locator("#speed").click();
   await expect(page.locator("#speed")).toHaveText("4×");
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(3500);
+  await page.screenshot({ path: "test-results/gameplay-speed.png" });
   await page.keyboard.press("Space");
   await page.waitForTimeout(300);
   await page.keyboard.press("Space");
