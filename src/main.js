@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Garden Wardens contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
 import { localizedText, bindPage } from "./i18n.js";
 import Phaser from "phaser";
 
@@ -1754,4 +1756,4 @@ export const game = new Phaser.Game({
 if (typeof document !== "undefined")
   document
     .querySelector("#speed")
-    .addEventListener("click", () => game.scene.getScene("game").cycleSpeed());
+    .addEventListener("click", () => game.scene.getScene("game")?.cycleSpeed());

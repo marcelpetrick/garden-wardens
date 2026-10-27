@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Garden Wardens contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
 import { test, expect } from "@playwright/test";
 async function clickGame(page, x, y) {
   const box = await page.locator("canvas").boundingBox();

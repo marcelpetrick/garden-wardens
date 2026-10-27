@@ -1,6 +1,6 @@
 {
   "name": "garden-wardens",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "description": "An original hand-painted WebGL garden tower-defense game.",
   "type": "module",
@@ -33,5 +33,5 @@
   "engines": {
     "node": ">=24.15.0"
   },
-  "license": "MIT"
+  "license": "GPL-3.0-or-later"
 }

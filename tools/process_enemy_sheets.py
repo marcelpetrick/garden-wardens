@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Garden Wardens contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Normalize generated 4x2 enemy contact sheets into Phaser-ready WebP atlases."""
 
 from pathlib import Path

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Garden Wardens contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Turn generated character sheets into clean, square RGBA game sprites.
 
 The script intentionally uses only Pillow and NumPy so contributors can

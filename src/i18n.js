@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Garden Wardens contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
 // Locale keys retain the original Mandarin copy to preserve the default experience.
 export const messages = {
   辉光花: "Glowbloom",
@@ -88,7 +90,7 @@ export const messages = {
   暂停: "Pause",
   点击: "Tap",
   "种植 / 融合 / 收集": "Plant / Fuse / Collect",
-  "开源项目 · MIT": "Open source · MIT",
+  "开源项目 · GPLv3": "Open source · GPLv3",
   "花园守夜人——原创手绘风 WebGL 植物塔防游戏。":
     "Garden Wardens — a hand-painted WebGL garden defense game.",
 };

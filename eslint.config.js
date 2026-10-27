@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Garden Wardens contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
 import js from "@eslint/js";
 import globals from "globals";
 export default [

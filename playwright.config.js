@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Garden Wardens contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "tests/e2e",
@@ -15,6 +17,6 @@ export default defineConfig({
     : {
         command: "npm run preview -- --port 4173 --strictPort",
         url: "http://127.0.0.1:4173",
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
       },
 });

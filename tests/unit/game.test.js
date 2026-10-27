@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Garden Wardens contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 
 // Rendering is covered by Playwright. This deterministic adapter records scene
