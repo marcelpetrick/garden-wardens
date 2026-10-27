@@ -1,3 +1,4 @@
+import { localizedText, bindPage } from "./i18n.js";
 import Phaser from "phaser";
 
 const WIDTH = 1600;
@@ -53,20 +54,26 @@ const ENEMIES = {
 };
 
 export class BootScene extends Phaser.Scene {
+  localizedText(x, y, source, style) {
+    return localizedText(this, x, y, source, style);
+  }
   constructor() {
     super("boot");
   }
 
   preload() {
     this.cameras.main.setBackgroundColor("#10271b");
-    const title = this.add
-      .text(WIDTH / 2, HEIGHT / 2 - 72, "花园正在苏醒", {
+    const title = this.localizedText(
+      WIDTH / 2,
+      HEIGHT / 2 - 72,
+      "花园正在苏醒",
+      {
         fontFamily: '"Noto Sans SC", sans-serif',
         fontSize: 34,
         fontStyle: "bold",
         color: "#fff4cc",
-      })
-      .setOrigin(0.5);
+      },
+    ).setOrigin(0.5);
     const track = this.add.rectangle(
       WIDTH / 2,
       HEIGHT / 2,
@@ -78,12 +85,10 @@ export class BootScene extends Phaser.Scene {
     const bar = this.add
       .rectangle(WIDTH / 2 - 210, HEIGHT / 2, 0, 8, 0xffd55c)
       .setOrigin(0, 0.5);
-    const percent = this.add
-      .text(WIDTH / 2, HEIGHT / 2 + 38, "0%", {
-        fontSize: 14,
-        color: "#91aa98",
-      })
-      .setOrigin(0.5);
+    const percent = this.localizedText(WIDTH / 2, HEIGHT / 2 + 38, "0%", {
+      fontSize: 14,
+      color: "#91aa98",
+    }).setOrigin(0.5);
     this.load.on("progress", (value) => {
       bar.width = 420 * value;
       percent.setText(`${Math.round(value * 100)}%`);
@@ -112,6 +117,9 @@ export class BootScene extends Phaser.Scene {
 }
 
 export class GameScene extends Phaser.Scene {
+  localizedText(x, y, source, style) {
+    return localizedText(this, x, y, source, style);
+  }
   constructor() {
     super("game");
   }
@@ -271,21 +279,17 @@ export class GameScene extends Phaser.Scene {
       .image(77, 73, "energy-orb")
       .setScale(0.72)
       .setDepth(102);
-    this.energyText = this.add
-      .text(109, 51, "150", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 28,
-        fontStyle: "bold",
-        color: "#fff4c9",
-      })
-      .setDepth(102);
-    this.add
-      .text(110, 83, "花园能量", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 12,
-        color: "#9fbaa6",
-      })
-      .setDepth(102);
+    this.energyText = this.localizedText(109, 51, "150", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 28,
+      fontStyle: "bold",
+      color: "#fff4c9",
+    }).setDepth(102);
+    this.localizedText(110, 83, "花园能量", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 12,
+      color: "#9fbaa6",
+    }).setDepth(102);
 
     this.cards = [];
     Object.entries(PLANTS).forEach(([key, data], index) => {
@@ -299,21 +303,22 @@ export class GameScene extends Phaser.Scene {
         .image(x + 40, 73, key)
         .setDisplaySize(65, 65)
         .setDepth(103);
-      const name = this.add
-        .text(x + 76, 48, data.name, {
-          fontFamily: '"Noto Sans SC"',
-          fontSize: 15,
-          fontStyle: "bold",
-          color: "#f8f1d6",
-        })
-        .setDepth(103);
-      const info = this.add
-        .text(x + 76, 74, `${data.role}  ·  ${data.cost}`, {
+      const name = this.localizedText(x + 76, 48, data.name, {
+        fontFamily: '"Noto Sans SC"',
+        fontSize: 15,
+        fontStyle: "bold",
+        color: "#f8f1d6",
+      }).setDepth(103);
+      const info = this.localizedText(
+        x + 76,
+        74,
+        `${data.role}  ·  ${data.cost}`,
+        {
           fontFamily: '"Noto Sans SC"',
           fontSize: 10,
           color: "#9db2a2",
-        })
-        .setDepth(103);
+        },
+      ).setDepth(103);
       hit.on("pointerdown", () => this.selectPlant(key));
       hit.on("pointerover", () => {
         if (this.selected !== key) cardBg.setAlpha(1.25);
@@ -326,14 +331,12 @@ export class GameScene extends Phaser.Scene {
       this.cards.push({ key, x, bg: cardBg, hit, icon, name, info });
     });
 
-    this.phaseLabel = this.add
-      .text(1180, 47, "暖阳阶段", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 13,
-        fontStyle: "bold",
-        color: "#ffe27a",
-      })
-      .setDepth(103);
+    this.phaseLabel = this.localizedText(1180, 47, "暖阳阶段", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 13,
+      fontStyle: "bold",
+      color: "#ffe27a",
+    }).setDepth(103);
     this.phaseTrack = this.add
       .rectangle(1180, 83, 160, 7, 0xffffff, 0.11)
       .setOrigin(0, 0.5)
@@ -342,34 +345,29 @@ export class GameScene extends Phaser.Scene {
       .rectangle(1180, 83, 1, 7, 0xffd65a)
       .setOrigin(0, 0.5)
       .setDepth(103);
-    this.waveText = this.add
-      .text(1365, 47, "波次 1 / 6", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 13,
-        fontStyle: "bold",
-        color: "#f6edda",
-      })
-      .setDepth(103);
-    this.weatherText = this.add
-      .text(1365, 78, "天气 · 平静", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 11,
-        color: "#9fbaa6",
-      })
-      .setDepth(103);
+    this.waveText = this.localizedText(1365, 47, "波次 1 / 6", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 13,
+      fontStyle: "bold",
+      color: "#f6edda",
+    }).setDepth(103);
+    this.weatherText = this.localizedText(1365, 78, "天气 · 平静", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 11,
+      color: "#9fbaa6",
+    }).setDepth(103);
 
     this.pauseButton = this.makeButton(1513, 74, "Ⅱ", 44, () =>
       this.togglePause(),
     );
     this.createToolDock();
     this.toastBg = this.add.graphics().setDepth(210).setAlpha(0);
-    this.toastText = this.add
-      .text(WIDTH / 2, 225, "", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 15,
-        fontStyle: "bold",
-        color: "#fff5d2",
-      })
+    this.toastText = this.localizedText(WIDTH / 2, 225, "", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 15,
+      fontStyle: "bold",
+      color: "#fff5d2",
+    })
       .setOrigin(0.5)
       .setDepth(211)
       .setAlpha(0);
@@ -423,28 +421,33 @@ export class GameScene extends Phaser.Scene {
         .rectangle(definition.x + 105, 169, 214, 52, 0xffffff, 0.001)
         .setDepth(106)
         .setInteractive({ useHandCursor: true });
-      const title = this.add
-        .text(definition.x + 16, 151, definition.title, {
+      const title = this.localizedText(
+        definition.x + 16,
+        151,
+        definition.title,
+        {
           fontFamily: '"Noto Sans SC"',
           fontSize: 13,
           fontStyle: "bold",
           color: "#f8efd0",
-        })
-        .setDepth(103);
-      const detail = this.add
-        .text(definition.x + 16, 175, definition.detail, {
+        },
+      ).setDepth(103);
+      const detail = this.localizedText(
+        definition.x + 16,
+        175,
+        definition.detail,
+        {
           fontFamily: '"Noto Sans SC"',
           fontSize: 10,
           color: "#8eaa96",
-        })
-        .setDepth(103);
-      const price = this.add
-        .text(definition.x + 196, 169, "", {
-          fontFamily: '"Noto Sans SC"',
-          fontSize: 11,
-          fontStyle: "bold",
-          color: "#ffd965",
-        })
+        },
+      ).setDepth(103);
+      const price = this.localizedText(definition.x + 196, 169, "", {
+        fontFamily: '"Noto Sans SC"',
+        fontSize: 11,
+        fontStyle: "bold",
+        color: "#ffd965",
+      })
         .setOrigin(1, 0.5)
         .setDepth(103);
       const tool = { ...definition, bg, hit, title, detail, price };
@@ -458,32 +461,29 @@ export class GameScene extends Phaser.Scene {
       .rectangle(1375, 169, 214, 52, 0xffffff, 0.001)
       .setDepth(106)
       .setInteractive({ useHandCursor: true });
-    this.toolboxTitle = this.add
-      .text(1290, 169, "花园工具箱", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 13,
-        fontStyle: "bold",
-        color: "#f8efd0",
-      })
+    this.toolboxTitle = this.localizedText(1290, 169, "花园工具箱", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 13,
+      fontStyle: "bold",
+      color: "#f8efd0",
+    })
       .setOrigin(0, 0.5)
       .setDepth(103);
-    this.toolboxArrow = this.add
-      .text(1461, 169, "＋", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 18,
-        color: "#ffd965",
-      })
+    this.toolboxArrow = this.localizedText(1461, 169, "＋", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 18,
+      color: "#ffd965",
+    })
       .setOrigin(0.5)
       .setDepth(103);
-    this.toolboxBadge = this.add
-      .text(1274, 145, "可用", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 10,
-        fontStyle: "bold",
-        color: "#18331f",
-        backgroundColor: "#d9ec77",
-        padding: { x: 8, y: 3 },
-      })
+    this.toolboxBadge = this.localizedText(1274, 145, "可用", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 10,
+      fontStyle: "bold",
+      color: "#18331f",
+      backgroundColor: "#d9ec77",
+      padding: { x: 8, y: 3 },
+    })
       .setOrigin(0.5)
       .setDepth(107)
       .setVisible(false);
@@ -619,12 +619,11 @@ export class GameScene extends Phaser.Scene {
       .setDepth(104)
       .setStrokeStyle(1, 0xffffff, 0.13)
       .setInteractive({ useHandCursor: true });
-    const text = this.add
-      .text(x, y - 1, label, {
-        fontSize: 17,
-        fontStyle: "bold",
-        color: "#e8efdf",
-      })
+    const text = this.localizedText(x, y - 1, label, {
+      fontSize: 17,
+      fontStyle: "bold",
+      color: "#e8efdf",
+    })
       .setOrigin(0.5)
       .setDepth(105);
     bg.on("pointerover", () => bg.setFillStyle(0xffffff, 0.14));
@@ -662,37 +661,39 @@ export class GameScene extends Phaser.Scene {
     panel.fillRoundedRect(435, 235, 730, 410, 34);
     panel.lineStyle(2, 0xffe39a, 0.24);
     panel.strokeRoundedRect(435, 235, 730, 410, 34);
-    const kicker = this.add
-      .text(800, 292, "A HAND-PAINTED GARDEN DEFENSE", {
+    const kicker = this.localizedText(
+      800,
+      292,
+      "A HAND-PAINTED GARDEN DEFENSE",
+      {
         fontSize: 11,
         fontStyle: "bold",
         color: "#91c492",
         letterSpacing: 3,
-      })
+      },
+    )
       .setOrigin(0.5)
       .setDepth(302);
-    const title = this.add
-      .text(800, 350, "守住这座会呼吸的花园", {
+    const title = this.localizedText(800, 350, "守住这座会呼吸的花园", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 39,
+      fontStyle: "bold",
+      color: "#fff4cf",
+    })
+      .setOrigin(0.5)
+      .setDepth(302);
+    const copy = this.localizedText(
+      800,
+      435,
+      "昼夜会改变守卫能力，天气会改变战场节奏。\n在同类植物上再次种植，融合出更强形态。",
+      {
         fontFamily: '"Noto Sans SC"',
-        fontSize: 39,
-        fontStyle: "bold",
-        color: "#fff4cf",
-      })
-      .setOrigin(0.5)
-      .setDepth(302);
-    const copy = this.add
-      .text(
-        800,
-        435,
-        "昼夜会改变守卫能力，天气会改变战场节奏。\n在同类植物上再次种植，融合出更强形态。",
-        {
-          fontFamily: '"Noto Sans SC"',
-          fontSize: 16,
-          color: "#aec2b2",
-          align: "center",
-          lineSpacing: 12,
-        },
-      )
+        fontSize: 16,
+        color: "#aec2b2",
+        align: "center",
+        lineSpacing: 12,
+      },
+    )
       .setOrigin(0.5)
       .setDepth(302);
     const buttonBg = this.add.graphics().setDepth(302);
@@ -702,13 +703,12 @@ export class GameScene extends Phaser.Scene {
       .rectangle(800, 567, 280, 64, 0xffffff, 0.001)
       .setDepth(304)
       .setInteractive({ useHandCursor: true });
-    const buttonText = this.add
-      .text(800, 566, "开始守护", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 19,
-        fontStyle: "bold",
-        color: "#3b2a08",
-      })
+    const buttonText = this.localizedText(800, 566, "开始守护", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 19,
+      fontStyle: "bold",
+      color: "#3b2a08",
+    })
       .setOrigin(0.5)
       .setDepth(303);
     button.on("pointerover", () => {
@@ -845,14 +845,13 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(0, 0.5)
       .setDepth(sprite.depth + 3)
       .setVisible(false);
-    const levelText = this.add
-      .text(x, y - 105, "LV.1", {
-        fontSize: 11,
-        fontStyle: "bold",
-        color: "#ffffff",
-        stroke: "#25412c",
-        strokeThickness: 4,
-      })
+    const levelText = this.localizedText(x, y - 105, "LV.1", {
+      fontSize: 11,
+      fontStyle: "bold",
+      color: "#ffffff",
+      stroke: "#25412c",
+      strokeThickness: 4,
+    })
       .setOrigin(0.5)
       .setDepth(sprite.depth + 3)
       .setVisible(false);
@@ -995,15 +994,14 @@ export class GameScene extends Phaser.Scene {
     const glow = this.add
       .rectangle(1485, y, 215, BOARD.cellH - 12, 0xffb84f, 0)
       .setDepth(78);
-    const marker = this.add
-      .text(1515, y, `第 ${row + 1} 路  来袭  ◀`, {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 13,
-        fontStyle: "bold",
-        color: "#fff1b4",
-        stroke: "#502d16",
-        strokeThickness: 4,
-      })
+    const marker = this.localizedText(1515, y, `第 ${row + 1} 路  来袭  ◀`, {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 13,
+      fontStyle: "bold",
+      color: "#fff1b4",
+      stroke: "#502d16",
+      strokeThickness: 4,
+    })
       .setOrigin(0.5)
       .setDepth(79)
       .setAlpha(0);
@@ -1559,37 +1557,39 @@ export class GameScene extends Phaser.Scene {
     panel.fillRoundedRect(485, 260, 630, 350, 32);
     panel.lineStyle(2, won ? 0xffdf71 : 0xe67863, 0.4);
     panel.strokeRoundedRect(485, 260, 630, 350, 32);
-    const title = this.add
-      .text(800, 350, won ? "黎明守住了" : "花园陷入沉睡", {
+    const title = this.localizedText(
+      800,
+      350,
+      won ? "黎明守住了" : "花园陷入沉睡",
+      {
         fontFamily: '"Noto Sans SC"',
         fontSize: 40,
         fontStyle: "bold",
         color: won ? "#fff0ac" : "#ffd0c7",
-      })
+      },
+    )
       .setOrigin(0.5)
       .setDepth(302);
-    const copy = this.add
-      .text(
-        800,
-        420,
-        won
-          ? "六波怪客全部退散，新的种子正在发芽。"
-          : "重新编排守卫，利用融合和昼夜共鸣再试一次。",
-        { fontSize: 15, color: "#adc1b1" },
-      )
+    const copy = this.localizedText(
+      800,
+      420,
+      won
+        ? "六波怪客全部退散，新的种子正在发芽。"
+        : "重新编排守卫，利用融合和昼夜共鸣再试一次。",
+      { fontSize: 15, color: "#adc1b1" },
+    )
       .setOrigin(0.5)
       .setDepth(302);
     const button = this.add
       .rectangle(800, 520, 230, 58, 0xffd15c, 1)
       .setDepth(302)
       .setInteractive({ useHandCursor: true });
-    const label = this.add
-      .text(800, 520, "再守一夜", {
-        fontFamily: '"Noto Sans SC"',
-        fontSize: 18,
-        fontStyle: "bold",
-        color: "#3d2a08",
-      })
+    const label = this.localizedText(800, 520, "再守一夜", {
+      fontFamily: '"Noto Sans SC"',
+      fontSize: 18,
+      fontStyle: "bold",
+      color: "#3d2a08",
+    })
       .setOrigin(0.5)
       .setDepth(303);
     button.on("pointerdown", () => this.scene.restart());
@@ -1700,6 +1700,8 @@ export class GameScene extends Phaser.Scene {
     }
   }
 }
+
+if (typeof document !== "undefined") bindPage(document);
 
 export const game = new Phaser.Game({
   type: Phaser.AUTO,

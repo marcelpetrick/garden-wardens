@@ -156,3 +156,24 @@ kbd {
     padding-top: 8px;
   }
 }
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.language-picker {
+  color: #b6cdbb;
+  font-size: 11px;
+}
+.language-picker select {
+  background: #173526;
+  color: #fff4cc;
+  border: 1px solid #65806b;
+  border-radius: 8px;
+  padding: 7px;
+  margin-left: 6px;
+}
+.language-picker select:focus-visible {
+  outline: 2px solid #ffdf63;
+}

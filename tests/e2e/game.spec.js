@@ -29,3 +29,30 @@ test("mobile canvas fits the viewport", async ({ page }) => {
     390,
   );
 });
+
+test("switches languages before and during play while Mandarin remains default", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
+  await page.locator("#language").selectOption("en");
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator(".brand b")).toHaveText("Garden Wardens");
+  await expect(page.locator("#game-container")).toHaveAttribute(
+    "aria-label",
+    "Garden Wardens game",
+  );
+  await page.waitForTimeout(2000);
+  await clickGame(page, 800, 567);
+  await clickGame(page, 310, 330);
+  await page.locator("#language").selectOption("zh-CN");
+  await expect(page.locator(".brand b")).toHaveText("花园守夜人");
+  await page.locator("#language").selectOption("en");
+  await page.keyboard.press("Space");
+  await page.keyboard.press("Space");
+  expect(errors).toEqual([]);
+  await page.reload();
+  await expect(page.locator("#language")).toHaveValue("zh-CN");
+});
