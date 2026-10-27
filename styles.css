@@ -177,3 +177,12 @@ kbd {
 .language-picker select:focus-visible {
   outline: 2px solid #ffdf63;
 }
+
+#speed {
+  background: #173526;
+  color: #fff4cc;
+  border: 1px solid #65806b;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}

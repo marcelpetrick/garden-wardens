@@ -442,3 +442,45 @@ describe("combat simulation", () => {
     delete window.AudioContext;
   });
 });
+
+it("cycles 1×, 2×, 4× and preserves speed through pause without advancing timers", () => {
+  expect(scene.gameSpeed).toBe(1);
+  scene.speedButton.bg.events.pointerdown();
+  expect(scene.gameSpeed).toBe(2);
+  scene.update(0, 1000);
+  expect(scene.elapsed).toBe(0.08);
+  scene.cycleSpeed();
+  expect(scene.gameSpeed).toBe(4);
+  scene.update(0, 1000);
+  expect(scene.elapsed).toBeCloseTo(0.24);
+  expect(scene.time.timeScale).toBe(4);
+  expect(scene.anims.globalTimeScale).toBe(4);
+  scene.togglePause();
+  expect(scene.time.timeScale).toBe(0);
+  expect(scene.tweens.timeScale).toBe(0);
+  expect(scene.anims.globalTimeScale).toBe(0);
+  scene.update(0, 1000);
+  expect(scene.elapsed).toBeCloseTo(0.24);
+  scene.togglePause();
+  expect(scene.gameSpeed).toBe(4);
+  expect(scene.time.timeScale).toBe(4);
+  scene.cycleSpeed();
+  expect(scene.gameSpeed).toBe(1);
+  scene.started = false;
+  scene.cycleSpeed();
+  expect(scene.gameSpeed).toBe(1);
+  scene.started = true;
+  scene.cycleSpeed();
+  scene.resetState();
+  expect(scene.gameSpeed).toBe(1);
+});
+it("uses bounded collision steps at 4× even after long frames", () => {
+  const p = plant();
+  const target = enemy(p.sprite.x + 70);
+  target.hp = 1;
+  scene.shoot(p, "berry-orb", 100, 470);
+  scene.gameSpeed = 4;
+  scene.weather = "tailwind";
+  scene.update(0, 1000);
+  expect(scene.enemyUnits).not.toContain(target);
+});

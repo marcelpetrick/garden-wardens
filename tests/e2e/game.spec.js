@@ -56,3 +56,24 @@ test("switches languages before and during play while Mandarin remains default",
   await page.reload();
   await expect(page.locator("#language")).toHaveValue("zh-CN");
 });
+
+test("speed control supports 4×, pause/resume and returning to normal", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  await expect(page.locator("canvas")).toBeVisible();
+  await page.waitForTimeout(2000);
+  await clickGame(page, 800, 567);
+  await clickGame(page, 310, 330);
+  await page.locator("#speed").click();
+  await page.locator("#speed").click();
+  await expect(page.locator("#speed")).toHaveText("4×");
+  await page.waitForTimeout(1500);
+  await page.keyboard.press("Space");
+  await page.waitForTimeout(300);
+  await page.keyboard.press("Space");
+  await page.locator("#speed").click();
+  expect(errors).toEqual([]);
+});

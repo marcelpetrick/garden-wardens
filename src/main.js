@@ -176,6 +176,8 @@ export class GameScene extends Phaser.Scene {
     this.ended = false;
     this.isPaused = false;
     this.elapsed = 0;
+    this.gameSpeed = 1;
+    this.applyGameSpeed();
     this.createMowers();
     this.selectPlant("sunbloom");
     this.updateHUD();
@@ -359,6 +361,9 @@ export class GameScene extends Phaser.Scene {
 
     this.pauseButton = this.makeButton(1513, 74, "Ⅱ", 44, () =>
       this.togglePause(),
+    );
+    this.speedButton = this.makeButton(1218, 169, "1×", 48, () =>
+      this.cycleSpeed(),
     );
     this.createToolDock();
     this.toastBg = this.add.graphics().setDepth(210).setAlpha(0);
@@ -1027,15 +1032,19 @@ export class GameScene extends Phaser.Scene {
   update(_time, deltaMs) {
     if (!this.started || this.isPaused || this.ended) return;
     const dt = Math.min(0.04, deltaMs / 1000);
-    this.elapsed += dt;
-    this.updatePhase(dt);
-    this.updateWeather(dt);
-    this.updateWave(dt);
-    this.updatePlants(dt);
-    this.updateTools(dt);
-    this.updateEnemies(dt);
-    this.updateProjectiles(dt);
-    this.updateMowers(dt);
+    // Bound each simulation step independently so fast projectiles and mowers
+    // cannot skip collision targets when accelerated or after a slow frame.
+    for (let step = 0; step < this.gameSpeed && !this.ended; step += 1) {
+      this.elapsed += dt;
+      this.updatePhase(dt);
+      this.updateWeather(dt);
+      this.updateWave(dt);
+      this.updatePlants(dt);
+      this.updateTools(dt);
+      this.updateEnemies(dt);
+      this.updateProjectiles(dt);
+      this.updateMowers(dt);
+    }
     this.updateHUD();
   }
 
@@ -1536,18 +1545,40 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  applyGameSpeed() {
+    const scale = this.isPaused ? 0 : this.gameSpeed;
+    this.tweens.timeScale = scale;
+    this.time.timeScale = scale;
+    this.anims.globalTimeScale = scale;
+    this.speedButton.text.setText(`${this.gameSpeed}×`);
+    if (typeof document !== "undefined")
+      document.querySelector("#speed").textContent = `${this.gameSpeed}×`;
+  }
+
+  cycleSpeed() {
+    if (!this.started || this.ended) return;
+    this.gameSpeed = this.gameSpeed === 1 ? 2 : this.gameSpeed === 2 ? 4 : 1;
+    this.applyGameSpeed();
+  }
+
   togglePause() {
     if (!this.started || this.ended) return;
     this.isPaused = !this.isPaused;
-    this.tweens.timeScale = this.isPaused ? 0 : 1;
+    this.applyGameSpeed();
     this.pauseButton.text.setText(this.isPaused ? "▶" : "Ⅱ");
     this.toast(this.isPaused ? "花园暂停了呼吸" : "继续守护");
+    if (this.isPaused) {
+      this.toastBg.setAlpha(1);
+      this.toastText.setAlpha(1);
+    }
   }
 
   endGame(won) {
     if (this.ended) return;
     this.ended = true;
-    this.tweens.timeScale = 1;
+    this.isPaused = false;
+    this.gameSpeed = 1;
+    this.applyGameSpeed();
     const shade = this.add
       .rectangle(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT, 0x07120c, 0.72)
       .setDepth(300)
@@ -1719,3 +1750,8 @@ export const game = new Phaser.Game({
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   scene: [BootScene, GameScene],
 });
+
+if (typeof document !== "undefined")
+  document
+    .querySelector("#speed")
+    .addEventListener("click", () => game.scene.getScene("game").cycleSpeed());
